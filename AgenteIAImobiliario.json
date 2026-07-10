@@ -1,0 +1,481 @@
+{
+  "name": "AgenteIAImobiliario",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a219c0fd-2319-41aa-b8c0-c07cb9552c19",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WFrtgxp9uhCGZKiq",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "## QUEM VOCÊ É\n\nVocê é o assistente virtual da Nova Lar Imóveis, uma imobiliária localizada em São Paulo que trabalha com venda e aluguel de apartamentos, casas e salas comerciais.\n\nSeu nome é Ana e você responde e-mails de clientes interessados em imóveis.\n\n## TOM DE VOZ\n\n- Profissional, mas acolhedor. Você quer que o cliente se sinta bem-vindo.\n- Use \"você\" (nunca \"tu\" ou \"senhor/senhora\").\n- Seja objetiva e vá direto ao ponto, sem enrolação.\n- Sempre demonstre interesse genuíno em ajudar o cliente a encontrar o imóvel ideal.\n\n## O QUE VOCÊ PODE FAZER\n\n- Responder dúvidas sobre os imóveis disponíveis.\n- Explicar como funciona o processo de compra ou aluguel.\n- Informar a documentação necessária.\n- Convidar o cliente para agendar uma visita a um imóvel.\n- Consultar a planilha de imóveis para buscar opções que atendam ao perfil do cliente.\n- Registrar os dados do lead na planilha de CRM sempre que identificar um cliente com interesse real.\n\n## INFORMAÇÕES DA EMPRESA\n\n- Regiões atendidas: Zona Sul, Zona Oeste e Centro de São Paulo.\n- Tipos de imóvel: apartamentos (studios, 1 a 4 quartos), casas e salas comerciais.\n- Faixa de preço venda: R$ 250.000 a R$ 2.500.000.\n- Faixa de preço aluguel: R$ 1.200 a R$ 12.000/mês.\n- Horário de atendimento humano: segunda a sexta, 9h às 18h / sábado, 9h às 13h.\n- Telefone/WhatsApp para agendamento de visitas: (11) 99999-0000.\n- Site: www.novalar.com.br\n\n## DOCUMENTAÇÃO\n\n### Para compra:\n- RG e CPF\n- Comprovante de renda (últimos 3 holerites ou declaração de IR)\n- Comprovante de residência\n- Certidão de estado civil\n- Se financiamento: extrato do FGTS + aprovação de crédito pelo banco\n\n### Para aluguel:\n- RG e CPF\n- Comprovante de renda (renda mínima de 3x o valor do aluguel)\n- Comprovante de residência\n- Garantia: fiador, seguro-fiança ou 3 meses de caução\n\n## PROCESSO DE COMPRA E ALUGUEL\n\n### Compra:\n1. Escolha do imóvel e visita\n2. Proposta e negociação\n3. Análise de documentação\n4. Assinatura do contrato de compra e venda\n5. Financiamento (se aplicável) e registro em cartório\nPrazo médio: 30 a 60 dias do aceite da proposta até as chaves.\n\n### Aluguel:\n1. Escolha do imóvel e visita\n2. Envio da documentação e análise de crédito\n3. Escolha da garantia (fiador, seguro-fiança ou caução)\n4. Assinatura do contrato\n5. Vistoria e entrega das chaves\nPrazo médio: 5 a 10 dias úteis após aprovação.\n\n## PERGUNTAS FREQUENTES\n\n- \"Vocês negociam preço?\" → Sim, sempre podemos apresentar uma proposta ao proprietário. O ideal é agendar uma visita primeiro e depois formalizar a proposta.\n- \"Posso usar FGTS?\" → Sim, para compra de imóveis residenciais, desde que atenda às regras da Caixa (não ter outro imóvel na cidade, etc).\n- \"Aceitam pet?\" → Depende do imóvel. Quando buscar opções, use o filtro \"Pet Friendly\" na planilha.\n- \"Tem taxa de corretagem?\" → Na venda, a comissão é paga pelo vendedor. No aluguel, não cobramos taxa do inquilino.\n\n## USO DAS FERRAMENTAS\n\n### Ferramenta: buscar_imoveis\nUse SEMPRE que o cliente perguntar sobre imóveis disponíveis, pedir recomendações ou mencionar características desejadas (bairro, quartos, preço, etc). Consulte a planilha e apresente as opções que mais se encaixam no perfil.\n\n### Ferramenta: registrar_lead\nUse SEMPRE que identificar que o cliente tem interesse real em um imóvel ou está buscando ativamente.\n\nANTES DE REGISTRAR: verifique se o e-mail do remetente já aparece na planilha de leads.\n- Se o lead JÁ EXISTE: NÃO crie uma nova linha. Apenas atualize as informações relevantes (ex: novo imóvel de interesse, mudança de orçamento, atualização de status ou próximo passo).\n- Se o lead NÃO EXISTE: crie uma nova linha com os dados abaixo.\n\nCampos para preenchimento:\n- Data: data de hoje\n- Nome: nome do cliente (extrair do e-mail)\n- E-mail: e-mail do remetente\n- Telefone: se mencionado, caso contrário \"Não informado\"\n- Interesse: Compra ou Aluguel\n- Região de Preferência: bairro ou região mencionada\n- Quartos: quantidade desejada, se mencionada\n- Orçamento Máximo: valor mencionado, se houver\n- Imóvel de Interesse (ID): ID do imóvel recomendado ou que o cliente perguntou\n- Resumo da Conversa: resumo de 1-2 frases do que o cliente precisa\n- Status: \"Novo lead\" (se novo) ou manter/atualizar o status existente\n- Próximo Passo: sugestão de ação (ex: \"Agendar visita\", \"Enviar mais opções\", etc)\n\nNÃO registre leads quando a pessoa só fez uma pergunta genérica sem demonstrar interesse real (ex: \"vocês atendem em Campinas?\" ou \"qual o horário de vocês?\").\n\n## REGRAS IMPORTANTES\n\n1. NUNCA invente informações sobre imóveis. Use SEMPRE a ferramenta buscar_imoveis para consultar a planilha antes de recomendar qualquer imóvel.\n2. Se o cliente pedir algo que não existe na planilha, diga que no momento não temos opções com esse perfil, mas que novas unidades entram toda semana, e sugira contato pelo WhatsApp.\n3. Se o cliente perguntar sobre assuntos não relacionados a imóveis, responda: \"Meu foco é te ajudar a encontrar o imóvel ideal! Como posso te ajudar com isso?\"\n4. Nunca fale mal de outras imobiliárias ou corretores.\n5. Se o cliente demonstrar interesse claro, sempre sugira agendar uma visita pelo WhatsApp (11) 99999-0000.\n6. Quando recomendar imóveis, pergunte sobre as necessidades do cliente antes de sair indicando opções.\n\n\n## FORMATAÇÃO DA RESPOSTA\n\nSua resposta DEVE ser HTML válido, pronto para ser enviado por e-mail.\n\nRegras obrigatórias:\n- Use <b>texto</b> para negrito — NUNCA **texto**\n- Use <br> para quebra de linha — NUNCA \\n\n- Use <br><br> para separar parágrafos\n- Use <ul><li>item</li></ul> para listas quando necessário\n- Use <a href=\"URL\">texto</a> para links\n- NÃO utilize Markdown em hipótese alguma\n- NÃO envolva a resposta em ```html```, ``` ou aspas\n- Comece diretamente pelo conteúdo em HTML\n- Toda a resposta deve ser um HTML válido e pronto para envio\n\n\nEstruture a resposta de forma organizada: separe cada imóvel recomendado em um bloco visual claro, com quebra de linha entre eles. Não envie tudo em um único parágrafo."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ab5a16bc-7117-4df6-843a-6386f67a1da0",
+      "name": "AI Agent",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "0059a2fa-9565-48eb-9bab-576e018fab2d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "INKEsppFkcXCnMul",
+          "name": "Google Gemini(PaLM) Api account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.threadId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        208
+      ],
+      "id": "1fdd421b-f331-48c2-ac38-2ca56f540c74",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1vlwrQAAIU2oHyuGTYBpDmCNn4YVeFPfWcYjb6Y5V5gM/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vlwrQAAIU2oHyuGTYBpDmCNn4YVeFPfWcYjb6Y5V5gM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        528,
+        208
+      ],
+      "id": "3d1ec459-427c-452c-8070-ac4854868179",
+      "name": "buscar_imoveis",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PPLXN05yvZgvpvL3",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1wvoEFCDnkq-WrURAyqM5E1-cNtR1KB_TBHKoPvqTtuU/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wvoEFCDnkq-WrURAyqM5E1-cNtR1KB_TBHKoPvqTtuU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "E-mail": "={{ $json.from.value[0].address }}",
+            "Data": "={{ $today.format('dd/MM/yyyy') }}",
+            "Nome": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nome', ``, 'string') }}",
+            "Telefone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Telefone', ``, 'string') }}",
+            "Interesse (Compra/Aluguel)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Interesse__Compra_Aluguel_', ``, 'string') }}",
+            "Região de Preferência": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Regi_o_de_Prefer_ncia', ``, 'string') }}",
+            "Quartos": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Quartos', ``, 'string') }}",
+            "Orçamento Máximo (R$)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Or_amento_M_ximo__R__', ``, 'string') }}",
+            "Imóvel de Interesse (ID)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Im_vel_de_Interesse__ID_', ``, 'string') }}",
+            "Resumo da Conversa": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Resumo_da_Conversa', ``, 'string') }}",
+            "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}",
+            "Próximo Passo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Pr_ximo_Passo', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "E-mail"
+          ],
+          "schema": [
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "E-mail",
+              "displayName": "E-mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Interesse (Compra/Aluguel)",
+              "displayName": "Interesse (Compra/Aluguel)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Região de Preferência",
+              "displayName": "Região de Preferência",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Quartos",
+              "displayName": "Quartos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Orçamento Máximo (R$)",
+              "displayName": "Orçamento Máximo (R$)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Imóvel de Interesse (ID)",
+              "displayName": "Imóvel de Interesse (ID)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumo da Conversa",
+              "displayName": "Resumo da Conversa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Próximo Passo",
+              "displayName": "Próximo Passo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        384,
+        208
+      ],
+      "id": "ae9b4374-3d8f-4e4d-831f-51ebc6216e15",
+      "name": "registrar_lead",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PPLXN05yvZgvpvL3",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "message": "={{ $json.output }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "cd273b3f-9acf-498b-9799-c0d0c2db461f",
+      "name": "Reply to a message",
+      "webhookId": "bd18f8a1-a1ca-46aa-813e-dcf966be8e7f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WFrtgxp9uhCGZKiq",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "19f444639cdc5314",
+          "threadId": "19f444639cdc5314",
+          "labelIds": [
+            "UNREAD",
+            "IMPORTANT",
+            "CATEGORY_PERSONAL",
+            "INBOX"
+          ],
+          "sizeEstimate": 14914,
+          "headers": {
+            "delivered-to": "Delivered-To: cristinayuki42@gmail.com",
+            "received": "Received: from PH6P220MB984195.NAMP220.PROD.OUTLOOK.COM\r\n ([fe80::70b9:c0b9:9566:b38b]) by PH6P220MB984195.NAMP220.PROD.OUTLOOK.COM\r\n ([fe80::70b9:c0b9:9566:b38b%4]) with mapi id 15.21.0159.015; Thu, 9 Jul 2026\r\n 00:27:58 +0000",
+            "x-received": "X-Received: by 2002:a17:90b:3c0b:b0:381:28e0:6262 with SMTP id 98e67ed59e1d1-3893fb7070cmr4792514a91.8.1783556880436;\r\n        Wed, 08 Jul 2026 17:28:00 -0700 (PDT)",
+            "arc-seal": "ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;\r\n b=VWCJFNQShG1eNh/zgC7ITcfAJmTZ5iTlfvUPkpcaQOyRTTVAfIfKYz/YB4fhMCvmUfEEKmVOKZOvtGH86yCTuXOAF6eDvKQaDn3zS8WMWQg1ldQT3ejbSpOpWjYq0GyYvAzdyLIvHGS0S6mx3eBS+Q+PNdY/s6wnpCy58selnjbyBfgyjq0aBdTgolfl2ZS0cnr3kHWoDAL3JNaea0vpcCKJMGUZ9TpkfyYZvqfo2BlOcc/4msjDGvqiwAdZisGrUVqRppP4JnAVwQGHnmSRp6l6gBPct5RXOfA+1+j6NZWqtiDQ44LC5tv9GrtXS3jMUFgfWQJ59Ri0BpWS+pf/4g==",
+            "arc-message-signature": "ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;\r\n s=arcselector10001;\r\n h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;\r\n bh=kDCzRHzy4kL/uYG4PCuRZ2KLS9C5QiNSJ53cAEtO5dk=;\r\n b=rMDCPYmDsOfGqriFEGfo0apKv7DgTfJZy+d83NqP5bNh1zDCBKXmJS+B7tM0AoLlyH9bKAqyuiQ2K8YXIouNnlWyKeonoHt/HODzGW0MKTdKRh5yAYn/wrvQGCdslkrysGT0X3QtRkKPE8OLdr3YTenR705eMEkIcLQv+kggt0qBjs5f3mbJ5J/XYQ6+KZCC9pH3LunOuZvC+nJnV3RKx4IidyKBFNLgOmjMsK0zvGlvUGIbaQfEQGMsv4PEiPV00qk+r9Anc8cNPxduMzsW5MRCc3+cCzVQfGkQtw4EPBzs5n2Pa55ZIIwu9EE/GuQfT1Qj/0KNo9XV/Mcfnv9cFQ==",
+            "arc-authentication-results": "ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass\r\n smtp.mailfrom=aluno.ufabc.edu.br; dmarc=pass action=none\r\n header.from=aluno.ufabc.edu.br; dkim=pass header.d=aluno.ufabc.edu.br;\r\n arc=none",
+            "return-path": "Return-Path: <yuki.c@aluno.ufabc.edu.br>",
+            "received-spf": "Received-SPF: pass (google.com: domain of yuki.c@aluno.ufabc.edu.br designates 2a01:111:f403:c001::2 as permitted sender) client-ip=2a01:111:f403:c001::2;",
+            "authentication-results": "authentication-results: dkim=none (message not signed)\r\n header.d=none;dmarc=none action=none header.from=aluno.ufabc.edu.br;",
+            "dkim-signature": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;\r\n d=alunoufabcedu.onmicrosoft.com; s=selector2-alunoufabcedu-onmicrosoft-com;\r\n h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;\r\n bh=kDCzRHzy4kL/uYG4PCuRZ2KLS9C5QiNSJ53cAEtO5dk=;\r\n b=0WLMRzKSPpiagpZQ3CPRilknmuRwu9vYP30anBnAjqOkJfA1KAijsSp0cWwiez3P2zV3brFiBojowcCk2zey9NLTQ5ap7EjHeHnySHeyoqLJW3wczi7k1wH64pSNd9RkHpW7z/VPAL7HkgLjafK66oMXwCYeAzPpJt8Av3G9ULU=",
+            "from": "From: Cristina Yuki Yokomizo <yuki.c@aluno.ufabc.edu.br>",
+            "to": "To: Cristina Yuki <cristinayuki42@gmail.com>",
+            "subject": "Subject: Apartamento Aluguel",
+            "thread-topic": "Thread-Topic: Apartamento Aluguel",
+            "thread-index": "Thread-Index: AQHdDznKt3wzzFcCz0iQEELcN+Sc8Q==",
+            "date": "Date: Thu, 9 Jul 2026 00:27:58 +0000",
+            "message-id": "Message-ID:\r\n <PH6P220MB984195032FE1A9F59E0CB4DA00F9FE2@PH6P220MB984195.NAMP220.PROD.OUTLOOK.COM>",
+            "accept-language": "Accept-Language: pt-BR, en-US",
+            "content-language": "Content-Language: pt-BR",
+            "x-ms-has-attach": "X-MS-Has-Attach:",
+            "x-ms-tnef-correlator": "X-MS-TNEF-Correlator:",
+            "msip_labels": "msip_labels:",
+            "x-ms-publictraffictype": "x-ms-publictraffictype: Email",
+            "x-ms-traffictypediagnostic": "x-ms-traffictypediagnostic: PH6P220MB984195:EE_|LV8P220MB1688:EE_",
+            "x-ms-office365-filtering-correlation-id": "x-ms-office365-filtering-correlation-id: eeb78830-05b4-4d86-edb7-08dedd50ed67",
+            "x-ms-exchange-senderadcheck": "x-ms-exchange-senderadcheck: 1",
+            "x-ms-exchange-antispam-relay": "x-ms-exchange-antispam-relay: 0",
+            "x-microsoft-antispam": "x-microsoft-antispam:\r\n BCL:0;ARA:13230040|23010399003|786006|41320700013|366016|1800799024|376014|8096899003|56012099006|38070700021|18002099003;",
+            "x-microsoft-antispam-message-info": "x-microsoft-antispam-message-info:\r\n NMFi1zsIwUqZGc5iIvRPwikYDJHBQKH0hX5SjiilJrqtKAthXB9pkX+LHa12kh0VVYKUHCByKzJQFdGN9sb282hip9lvo4J+gkWryCWIcU2H0GOjAuoMKmA/Dc8ce6aR89PdtzDrhFx/bvL9mDKHPcpEhUa+rhlHBNmfsYNd7L+5YPsp3+oGUjYg1/1mkmxn8n0qLmL8zfX1DOhE9Rdn/f8Vrt15Ioipqu0HabBN5vnoak3ZUaYc9AC7gExYvZpodmyEygpzepKrsdie6RvkF7deZj0ykyE77gyVFSY0EKMdKntYVwCqHH19it9+K9wtX9ejBqtqvuKfgLlhb3dZbMYJDfyPFB+v8kc2GTj5aqtaOUXehFiRPjg2TLUkaaGF2v6WR8IUMviOf0PsaVlzFRxK7jYFNjb1S1bLTGVZSH5HsU5kLU4RhZrMngJErYv8wLtmRB/yZFyfeAk6HuVlrC8yNA2Gxx+Kj1rTfYrm9tT5RiTqx+JQGIyucg8e9Uv9n7BI4Hh5iww4E14maayRF+qNG4bGjXO1Tw8VOt7LkGTp+xoys9hQf24eMQfG4bNYxDFT7+XtfJs80xCwfRdXkxe99UlWPiLKFZtPUe/ToZfYShBPysVLcd6/8vLX4nqJjLNK9D3af+bOVDw3SYYd8Ltw/pfv4Ic/LcREKu9Cd7HyfND6PDwLz1BpU3LR5ORWlNEylsiaaN7Be3/5d4SzkKJFGtYnF28HGfnpnMok7bk=",
+            "x-forefront-antispam-report": "x-forefront-antispam-report:\r\n CIP:255.255.255.255;CTRY:;LANG:pt;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH6P220MB984195.NAMP220.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(786006)(41320700013)(366016)(1800799024)(376014)(8096899003)(56012099006)(38070700021)(18002099003);DIR:OUT;SFP:1102;",
+            "x-ms-exchange-antispam-messagedata-chunkcount": "x-ms-exchange-antispam-messagedata-chunkcount: 1",
+            "x-ms-exchange-antispam-messagedata-0": "x-ms-exchange-antispam-messagedata-0:\r\n =?iso-8859-1?Q?1U27EpzcB/338d8Dn4maNkskQAKfJY6V1VH5soGONgSxGW2knceb8PZI8q?=\r\n =?iso-8859-1?Q?X5XqkoNVIVKZgwYYUAbc32cGQQ+IHGyMM6GppMI46noEQwOR2SubLBXeEX?=\r\n =?iso-8859-1?Q?LIHYNgbXKYagXG41kxQoBGrM9XYz21N9E1WpY2oxlo+ilu5ItOHIk8AZHb?=\r\n =?iso-8859-1?Q?dswgbjaYkn7q7iUgJsJTTuqlg9hTRqfsN5It8cV9kf+zAps1R6/Sosavye?=\r\n =?iso-8859-1?Q?E52lL9XWUo0/kvbVNeSd/EmzlXGeIGdZgVGd0d/TBNAn2EdV3FvDTCpbY+?=\r\n =?iso-8859-1?Q?+VzNpn16DtmAgE9NDFWU4nF5iS3E5xMSwhmRdrwcTipQVZFxFwnShjFAj/?=\r\n =?iso-8859-1?Q?uuWrtO7i8hHqtlLNYyfDMbU1g6bzQuHYJewjcRpKUrI3pXTmzOZ76zOhQw?=\r\n =?iso-8859-1?Q?eT4zEnHo9XAzZiA8SuN2NypABlDmuJPmpUeZqJxcmDIHKgO1/LENXE+Xa/?=\r\n =?iso-8859-1?Q?BzFecmLE2fuzcydw+H4XMekY4FVzHWjGjHyC+tg+kuESMglqiwXdhKpum7?=\r\n =?iso-8859-1?Q?lJJuyzf2EQTmD2CZi5QC60/X4WVe1gCPDUX+jqHArhxnEHRlldWu4yqx/S?=\r\n =?iso-8859-1?Q?Ug81jD71nUXEKYachVHo0oXL0wIK5dREysoawHMtefZNkDYkFNoGNIUbty?=\r\n =?iso-8859-1?Q?M55ptXgaQUp7zrOv6GUOdttOYTNOM98IfiUt0KhZpXtOngtGf11wNRJiLM?=\r\n =?iso-8859-1?Q?4md+iKUgEfaEst7oiiZhrwSEnZALKfsfbEzdjVx3oCytCbiUVRBucflXKK?=\r\n =?iso-8859-1?Q?l49qTRiEYC0ETCnItkSvYKaTHTvA6g65S+KxKQDWclXxC2hov55CrhAxMs?=\r\n =?iso-8859-1?Q?JNGmNLoJfngzIrMGXOlamt4K9THDyWOLGOUxrVbDgVEfxZnPbbZ+ZCtRzm?=\r\n =?iso-8859-1?Q?r3OmzvUZ/R8Nm82bY4RMYaPi4qqcMY3KolKyRA5tcbwARD+K6WI6KmV4Od?=\r\n =?iso-8859-1?Q?yTIOAiSN9ij6W6YP+BZ5Nz5stT2Xry7UXp6RrleXSeXc2gXifXaBkXW6k5?=\r\n =?iso-8859-1?Q?0Hz5cV2uwYxXD8XokDEfL7ygrexh4IyyQZ9i+96vGbKDORQE7vh+eKR8fQ?=\r\n =?iso-8859-1?Q?dklEQuvPA/a8IirO0LpQooaCjVzceld3+uWUoq2STDXq2jGiA5Qywtywcu?=\r\n =?iso-8859-1?Q?VzRPTsVeYHhDtjNF50oJkwo0lu16IxNMBI1tNd1qS88eAsgnZAjpDE4lV0?=\r\n =?iso-8859-1?Q?tLSNViz+NdeJbwIqzGUQa5l0tUN9xHhLCVwkPVhXFABQi8Agqok747/eqd?=\r\n =?iso-8859-1?Q?VFwP0QMGIyxbsYJlOHcXx54hYV7Vqg4/WVxEhtSdlvwSEUSeZAEB5ENDkL?=\r\n =?iso-8859-1?Q?9xt6CDVS1vbqV8tjUWfTrfLu6TSIQV6z0DqjU7lP6RMcyuc7z+CJ3m47lf?=\r\n =?iso-8859-1?Q?shHcb3wXXXtWKiJ2G1iHL6FJBkCQsnMlRA51xbvrQTlPIPanqSx/XWrf+y?=\r\n =?iso-8859-1?Q?KR/YT40dQC+OHt/xW2ZcTW2QIkGYDeKN3UVSFZv3ugZo7pp4XqfBUa/YuE?=\r\n =?iso-8859-1?Q?XcNn3s6R/hRGCSTH/nRQOUYFaOMXVzUU+V72ns1UK5t6hm8zZV387M2zf/?=\r\n =?iso-8859-1?Q?n9NQ4nbCB1HF5YD/rOJU52L3XGOxQq8CRmG38jNoMjg8IhurklInKajj+g?=\r\n =?iso-8859-1?Q?cBOZ5U26WkHXi/buIpxmAsMc53vnm/eFrsQBE+R0P6lPAqQ2oqWyRqC7xg?=\r\n =?iso-8859-1?Q?qK3jg2mnnByGSJ/GDa1FLxzRM0GH5bUqL5iJC1IBdOE/f0asMpD5S1j59F?=\r\n =?iso-8859-1?Q?okJ/7GwrJ7dNUwFquekjAWElz2mKWNklzJAVIagLEUi7A3x8G1b6ZHdiYi?=\r\n =?iso-8859-1?Q?BuDMEfIAXQ=3D=3D?=",
+            "content-type": "Content-Type: multipart/alternative;\r\n\tboundary=\"_000_PH6P220MB984195032FE1A9F59E0CB4DA00F9FE2PH6P220MB984195_\"",
+            "mime-version": "MIME-Version: 1.0",
+            "x-originatororg": "X-OriginatorOrg: aluno.ufabc.edu.br",
+            "x-ms-exchange-crosstenant-authas": "X-MS-Exchange-CrossTenant-AuthAs: Internal",
+            "x-ms-exchange-crosstenant-authsource": "X-MS-Exchange-CrossTenant-AuthSource: PH6P220MB984195.NAMP220.PROD.OUTLOOK.COM",
+            "x-ms-exchange-crosstenant-network-message-id": "X-MS-Exchange-CrossTenant-Network-Message-Id: eeb78830-05b4-4d86-edb7-08dedd50ed67",
+            "x-ms-exchange-crosstenant-originalarrivaltime": "X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2026 00:27:58.2681\r\n (UTC)",
+            "x-ms-exchange-crosstenant-fromentityheader": "X-MS-Exchange-CrossTenant-fromentityheader: Hosted",
+            "x-ms-exchange-crosstenant-id": "X-MS-Exchange-CrossTenant-id: 168d4137-d6f6-45f8-aaa7-d1a70233095e",
+            "x-ms-exchange-crosstenant-mailboxtype": "X-MS-Exchange-CrossTenant-mailboxtype: HOSTED",
+            "x-ms-exchange-crosstenant-userprincipalname": "X-MS-Exchange-CrossTenant-userprincipalname: 76i1O1RRHeef3PiZFX02oc9HdSfBn9UFqbAKfohsfVRBa2dX6mHe00H1Wro2SKNbt10irUneM2d+Yoeey/DdzOU94BKlt641/ABV7r2rig4=",
+            "x-ms-exchange-transport-crosstenantheadersstamped": "X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8P220MB1688"
+          },
+          "html": "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">\n<style type=\"text/css\" style=\"display:none;\"> P {margin-top:0;margin-bottom:0;} </style>\n</head>\n<body dir=\"ltr\">\n<div style=\"text-align: left; text-indent: 0px; margin: 1em 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\nOlá!</div>\n<div style=\"text-align: left; text-indent: 0px; margin: 1em 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\nMeu nome é Rafael Oliveira, encontrei vocês pelo site e gostaria de uma ajuda para encontrar um apartamento para alugar.</div>\n<div style=\"text-align: left; text-indent: 0px; margin: 1em 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\nEstou procurando algo na Zona Oeste de SP, de preferência em Pompeia, Perdizes ou Vila Madalena. Preciso de 2 quartos (sendo 1 que eu possa usar como home office), e meu orçamento é de até R$ 4.500/mês, já com condomínio.</div>\n<div style=\"text-align: left; text-indent: 0px; margin: 1em 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\nTenho um cachorro de porte pequeno, então preciso que o prédio aceite pet.</div>\n<div style=\"text-align: left; text-indent: 0px; margin: 1em 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\nPretendendo me mudar nos próximos 60 dias. Minha renda é de R$ 15.000/mês (CLT) e eu teria fiador se necessário.</div>\n<div style=\"text-align: left; text-indent: 0px; margin: 1em 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\nMe envia por favor algumas opções que se encaixem?</div>\n<div style=\"text-align: left; text-indent: 0px; margin: 1em 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\nMeu WhatsApp é (11) 98765-4321.</div>\n<div style=\"text-align: left; text-indent: 0px; margin: 1em 0px; font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\nObrigado, Rafael Oliveira</div>\n<div style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\n<br>\n</div>\n</body>\n</html>\n",
+          "text": "Olá!\nMeu nome é Rafael Oliveira, encontrei vocês pelo site e gostaria de uma ajuda para encontrar um apartamento para alugar.\nEstou procurando algo na Zona Oeste de SP, de preferência em Pompeia, Perdizes ou Vila Madalena. Preciso de 2 quartos (sendo 1 que eu possa usar como home office), e meu orçamento é de até R$ 4.500/mês, já com condomínio.\nTenho um cachorro de porte pequeno, então preciso que o prédio aceite pet.\nPretendendo me mudar nos próximos 60 dias. Minha renda é de R$ 15.000/mês (CLT) e eu teria fiador se necessário.\nMe envia por favor algumas opções que se encaixem?\nMeu WhatsApp é (11) 98765-4321.\nObrigado, Rafael Oliveira\n\n",
+          "textAsHtml": "<p>Ol&aacute;!<br/>Meu nome &eacute; Rafael Oliveira, encontrei voc&ecirc;s pelo site e gostaria de uma ajuda para encontrar um apartamento para alugar.<br/>Estou procurando algo na Zona Oeste de SP, de prefer&ecirc;ncia em Pompeia, Perdizes ou Vila Madalena. Preciso de 2 quartos (sendo 1 que eu possa usar como home office), e meu or&ccedil;amento &eacute; de at&eacute; R$ 4.500/m&ecirc;s, j&aacute; com condom&iacute;nio.<br/>Tenho um cachorro de porte pequeno, ent&atilde;o preciso que o pr&eacute;dio aceite pet.<br/>Pretendendo me mudar nos pr&oacute;ximos 60 dias. Minha renda &eacute; de R$ 15.000/m&ecirc;s (CLT) e eu teria fiador se necess&aacute;rio.<br/>Me envia por favor algumas op&ccedil;&otilde;es que se encaixem?<br/>Meu WhatsApp &eacute; (11) 98765-4321.<br/>Obrigado, Rafael Oliveira</p>",
+          "subject": "Apartamento Aluguel",
+          "date": "2026-07-09T00:27:58.000Z",
+          "to": {
+            "value": [
+              {
+                "address": "cristinayuki42@gmail.com",
+                "name": "Cristina Yuki"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Cristina Yuki</span> &lt;<a href=\"mailto:cristinayuki42@gmail.com\" class=\"mp_address_email\">cristinayuki42@gmail.com</a>&gt;</span>",
+            "text": "\"Cristina Yuki\" <cristinayuki42@gmail.com>"
+          },
+          "from": {
+            "value": [
+              {
+                "address": "yuki.c@aluno.ufabc.edu.br",
+                "name": "Cristina Yuki Yokomizo"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Cristina Yuki Yokomizo</span> &lt;<a href=\"mailto:yuki.c@aluno.ufabc.edu.br\" class=\"mp_address_email\">yuki.c@aluno.ufabc.edu.br</a>&gt;</span>",
+            "text": "\"Cristina Yuki Yokomizo\" <yuki.c@aluno.ufabc.edu.br>"
+          },
+          "messageId": "<PH6P220MB984195032FE1A9F59E0CB4DA00F9FE2@PH6P220MB984195.NAMP220.PROD.OUTLOOK.COM>"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_imoveis": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar_lead": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3b8250ea-011d-49ba-a90e-35a9fb87c4bf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a231af8a3d42145d3869023849e3541c92fda8feedc21977f5b352caf46315ca"
+  },
+  "nodeGroups": [],
+  "id": "E7Rtg6I2QJD4QJWG",
+  "tags": []
+}
