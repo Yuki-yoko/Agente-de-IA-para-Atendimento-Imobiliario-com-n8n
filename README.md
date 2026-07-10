@@ -100,8 +100,8 @@ Em seguida, essa resposta é enviada ao cliente através do Gmail.
 .
 ├── AgenteIAImobiliario.json          # Workflow completo do n8n
 ├── Prompt.pdf             # Prompt utilizado pelo agente imobiliário
-├── Agenda.xls            # Planilha utilizado para o agendamento
-├── BaseApartametos.xls   # Planilha com todos os apartamentos disponíveis na empresa
+├── Agenda.xlsx            # Planilha utilizado para o agendamento
+├── BaseApartametos.xlsx   # Planilha com todos os apartamentos disponíveis na empresa
 └── README.md
 
 ```
